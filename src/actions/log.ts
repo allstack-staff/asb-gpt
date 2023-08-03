@@ -1,50 +1,59 @@
 import fs from 'fs';
 import mysql from 'mysql2/promise';
-import { ChatCompletionRequestMessage } from 'openai';
 import { MongoClient, Db, Collection, MongoClientOptions } from 'mongodb';
 
-interface Response {
+export type Message = {
     role: string;
     content: string;
+}
+export type ApiResponse = {
+    status: number;
+    message: unknown;
 }
 
 export interface MessageLog {
     senderId: string;
-    message: string;
+    message: Message | string;
     response?: Record<string, any>; // Usar 'Record<string, any>' para aceitar campos dinâmicos.
 }
 
-interface MySQLConfig {
+export interface MySQLConfig {
     host: string;
     user: string;
     password: string;
     database: string;
 }
 
-interface MessageData {
+export interface MessageData {
     [key: string]: any; // Usar objeto genérico para campos personalizados.
 }
 
-interface MongoDBConfig {
+export interface MongoDBConfig {
     url: string;
     databaseName: string;
     collectionName: string;
 }
 
+
 export class LOG {
-    private getTimeStamp(): string {
+    getTimeStamp(): string {
         const now = new Date();
         const date = now.toISOString().split('T')[0].replace(/-/g, '');
         const time = now.toTimeString().split(' ')[0].replace(/:/g, '');
         return `${date}_${time}`;
     }
 
-    defaultSaveMessageToJSON(
+    async SaveMessageToJSON(
         senderId: string,
-        message: string,
-        response?: Record<string, any> // Usar 'Record<string, any>' para aceitar campos dinâmicos.
-    ): void {
-        const history = fs.readFileSync('gpt.json', 'utf-8');
+        message: Message | string,
+        response?: Record<string, any>, // Usar 'Record<string, any>' para aceitar campos dinâmicos.
+        name: string = 'gpt.json'
+    ): Promise<void> {
+        if (!name.endsWith(".json")) {
+            throw new Error(`Incorrect name format. Use ${name}.json or leave it empty to assign the default value,`)
+        }
+
+        const history = fs.readFileSync(name, 'utf-8');
         const historyJSON: { [key: string]: MessageLog } = JSON.parse(history);
 
         const logEntry: MessageLog = {
@@ -61,31 +70,25 @@ export class LOG {
 
 
     async SaveMessageToMySQL(
-        id: string,
+        mysqlConfig: MySQLConfig,
+        senderId: string,
         message: string,
-        config: MySQLConfig,
-        response?: ChatCompletionRequestMessage
-    ): Promise<void | { status: number; message: unknown }> {
+        response?: Record<string, any>,
+    ): Promise<void | ApiResponse> {
         try {
-            const connection = await mysql.createConnection(config);
-
-            // Verificar a conexão com o banco de dados
+            const connection = await mysql.createConnection(mysqlConfig);
             await connection.ping();
 
             // Verificar se o banco de dados e a tabela existem
-            const databaseExists = await this.checkDatabaseExists(connection, config.database);
+            const databaseExists = await this.checkDatabaseExists(connection, mysqlConfig.database);
             const tableExists = await this.checkTableExists(connection, 'chat_history');
 
             if (!databaseExists || !tableExists) {
                 throw new Error('Banco de dados ou tabela não existem.');
             }
 
-            const insertQuery = `INSERT INTO chat_history (id, message, response) VALUES (?, ?, ?)`;
-            const insertData = [
-                id + '_' + this.getTimeStamp(),
-                message,
-                response ? JSON.stringify(response) : null,
-            ];
+            const insertQuery = `INSERT INTO chat_history (sender_id, message, response) VALUES (?, ?, ?)`;
+            const insertData = [senderId, message, response];
 
             await connection.execute(insertQuery, insertData);
 
@@ -100,11 +103,11 @@ export class LOG {
     }
 
     async SaveMessageToMongoDB(
+        mongoDBConfig: MongoDBConfig,
         senderId: string,
         message: string,
-        mongoDBConfig: MongoDBConfig,
-        messageData?: MessageData // Movido para a posição final dos parâmetros
-    ): Promise<void | { status: number; message: unknown }> {
+        response?: MessageData // Movido para a posição final dos parâmetros
+    ): Promise<void | ApiResponse> {
         try {
             const client = await MongoClient.connect(mongoDBConfig.url, mongoDBConfig as MongoClientOptions);
             const db: Db = client.db(mongoDBConfig.databaseName);
@@ -113,10 +116,9 @@ export class LOG {
             const logEntry: MessageData = {
                 senderId,
                 message,
-                ...messageData, // Adicionar campos personalizados ao logEntry.
+                ...response, // Adicionar campos personalizados ao logEntry.
             };
 
-            const timestamp = this.getTimeStamp();
             await collection.insertOne(logEntry);
 
             client.close();
@@ -132,13 +134,13 @@ export class LOG {
 
     private async checkDatabaseExists(connection: mysql.Connection, databaseName: string): Promise<boolean> {
         const [rows] = await connection.execute('SHOW DATABASES');
-        const databases: { Database: string }[] = rows as { Database: string }[];
+        const databases = rows as { Database: string }[];
         return databases.some((row) => row.Database === databaseName);
     }
 
     private async checkTableExists(connection: mysql.Connection, tableName: string): Promise<boolean> {
         const [rows] = await connection.execute('SHOW TABLES');
-        const tables: { [key: string]: string }[] = rows as { [key: string]: string }[];
+        const tables = rows as { [key: string]: string }[];
         return tables.some((row) => Object.values(row)[0] === tableName);
     }
 

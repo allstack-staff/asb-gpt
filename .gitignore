@@ -128,18 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-<<<<<<< HEAD
 
 #openai
 test.js
-# wwebjs
-.wwebjs_auth
-.wwebjs_cache
 
 #json
 *.json
 
 #Typescript
 dist/
-=======
->>>>>>> 3445bb9f127bd25837f107ef7ed8dacb7ee5cc8c
