@@ -1,4 +1,4 @@
-import { LOG, MongoDBConfig, MySQLConfig } from './actions/log';
+import { LOG, MongoDBConfig, MySQLConfig } from './asb-gpt';
 const log = new LOG();
 
 const mysqlConfig: MySQLConfig = {
