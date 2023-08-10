@@ -2,7 +2,7 @@ import fs from 'fs';
 import mysql from 'mysql2/promise';
 import { MongoClient, Db, Collection, MongoClientOptions } from 'mongodb';
 import { ApiResponse, Message, MessageData, MessageLog, MongoDBConfig, MySQLConfig } from '../asb-gpt';
-export class LOG {
+export default class LOG {
     getTimeStamp(): string {
         const now = new Date();
         const date = now.toISOString().split('T')[0].replace(/-/g, '');
