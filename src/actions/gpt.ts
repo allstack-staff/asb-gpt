@@ -1,6 +1,4 @@
-import { ConfigGPT, Resp, historyMessages } from "../asb-gpt";
-import Axios from "../asb-gpt";
-
+import Axios, { ConfigGPT, Resp, historyMessages } from "../asb-gpt";
 export class GPT extends Axios {
   private messages: historyMessages;
   apiKey: string;
@@ -59,21 +57,17 @@ export class GPT extends Axios {
         }
       );
 
-      const resp: Resp = {
-        response: res.data.choices[0].message || res.data.error,
-        usage: res.data.usage || null,
-      };
-
-      if (resp.response) {
-        if (this.messages.length >= this.length) this.messages.splice(1, (this.length - 5))
+      if (res.status === 200) {
+        if (this.messages.length >= this.length)
+          this.messages.splice(1, this.length - 5);
 
         this.messages.push({
           role: "user",
-          content: resp.response as string,
+          content: res.data.choices[0].message as string,
         });
       }
 
-      return { data: resp };
+      return res;
     } catch (err) {
       console.error(err);
       throw new Error(`Erro ao executar a solicitação: ${err}`);
