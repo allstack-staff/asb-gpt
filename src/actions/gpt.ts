@@ -1,76 +1,122 @@
-import Axios, { ConfigGPT, Resp, historyMessages } from "../asb-gpt";
+import { AxiosResponse } from "axios";
+import Axios, {
+  ChatConfig,
+  ConfigGPT,
+  Resp,
+  CHAT_URL,
+  historyMessages,
+  Message,
+} from "../asb-gpt";
 export class GPT extends Axios {
   private messages: historyMessages;
-  apiKey: string;
-  history: boolean;
-  model: string;
-  max_tokens: number;
-  length: number;
-  defaultContentMessage: { role: string; content: string };
+  apikey: string | undefined;
+  history?: boolean | undefined;
+  model?: string | undefined;
+  max_tokens?: number | undefined;
+  historyLength: number;
+  defaultContentMessage: Message;
+  defaultConfig: ChatConfig;
 
   constructor({
-    apiKey,
+    apikey,
     history = true,
     model = "gpt-3.5-turbo",
     max_tokens = 500,
   }: ConfigGPT) {
-    super();
-    this.apiKey = apiKey;
+    super(apikey);
+    this.apiKey = apikey;
     this.history = history;
     this.model = model;
     this.max_tokens = max_tokens;
-    this.length = 20;
+    this.historyLength = 20;
     this.defaultContentMessage = {
       role: "system",
       content: "You are a helpful assistant.",
     };
-    this.messages = [];
+    this.messages = [this.defaultContentMessage];
+
+    this.defaultConfig = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant",
+        },
+      ],
+      temperature: 1,
+      max_tokens: 256,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    };
   }
 
-  public setHistory({ role, content }, length: number) {
+  public setHistory(
+    { role, content }: Message,
+    historyLength?: number | undefined
+  ): void {
     if (role === undefined || content === undefined)
       throw new Error("role or content is undefined");
     this.messages.push({ role, content });
-    this.length = length === undefined ? this.length : length;
+    this.historyLength =
+      historyLength === undefined ? this.historyLength : historyLength;
   }
 
-  public async requestChat(body: string): Promise<{ data: Resp }> {
+  public getHistory(): historyMessages | string[] {
+    return this.messages.map((message) => JSON.stringify(message));
+  }
+
+  public clearHistory(): void {
+    this.messages.splice(0);
+    this.messages = [this.defaultContentMessage];
+  }
+
+  public async defaultRequestChat(
+    body: string
+  ): Promise<{ role: string; content: string }> {
     if (body === undefined) throw new Error("body is undefined");
 
     const content = body.trim();
 
-    if (this.history) this.messages.push({ role: "user", content });
+    if (this.history && this.historyLength > 0) this.messages.push({ role: "user", content });
 
     try {
-      const res = await this.axiosRequest(
-        "POST",
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: this.model,
-          messages: this.history
-            ? this.messages
-            : () => {
-                this.messages = [];
-                this.messages.push(this.defaultContentMessage);
-              },
-          max_tokens: this.max_tokens,
-        }
-      );
+      const messages = this.history
+        ? this.messages
+        : [this.defaultContentMessage];
+
+      const res = await this.chatRequest("POST", CHAT_URL, {
+        model: this.model,
+        messages: messages,
+        max_tokens: this.max_tokens,
+      });
 
       if (res.status === 200) {
-        if (this.messages.length >= this.length)
-          this.messages.splice(1, this.length - 5);
+        if (this.messages.length >= this.historyLength)
+          this.messages.splice(1, this.historyLength - 5);
 
         this.messages.push({
-          role: "user",
-          content: res.data.choices[0].message as string,
+          role: res.data.choices[0].message.role,
+          content: res.data.choices[0].message.content as string,
         });
       }
 
-      return res;
+      return res.data.choices[0].message;
     } catch (err) {
-      console.error(err);
-      throw new Error(`Erro ao executar a solicitação: ${err}`);
+      throw new Error(`${err}`);
+    }
+  }
+
+  async requestChat(
+    config: ChatConfig
+  ): Promise<AxiosResponse<string, object>> {
+    const mergedConfig = { ...this.defaultConfig, ...config };
+
+    try {
+      const response = await this.chatRequest("POST", CHAT_URL, mergedConfig);
+      return response;
+    } catch (err) {
+      throw new Error("error requesting chat: \n" + err);
     }
   }
 }

@@ -1,9 +1,9 @@
-import Axios from "../asb-gpt";
+import Axios, { IMAGE_URL } from "../asb-gpt";
 
 export class DALLE extends Axios {
-  apikey: string;
-  constructor(apikey: string) {
-    super();
+  apikey: string | undefined;
+  constructor(apikey: string | undefined) {
+    super(apikey);
     this.apikey;
   }
 
@@ -15,9 +15,9 @@ export class DALLE extends Axios {
     user: string | undefined = undefined
   ) {
     if (prompt === undefined) throw new Error("prompt is undefined");
-    return await this.axiosRequest(
+    return await this.chatRequest(
       "POST",
-      "https://api.openai.com/v1/images/generations",
+      IMAGE_URL,
       { prompt, n, size, response_format, user }
     );
   }

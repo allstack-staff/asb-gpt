@@ -1,8 +1,8 @@
 export type ConfigGPT = {
-  history: boolean;
-  model: string;
-  max_tokens: number;
-  apiKey: string;
+  history?: boolean | undefined;
+  model?: string | undefined;
+  max_tokens?: number | undefined;
+  apikey: string | undefined;
 };
 
 export type Message = {
@@ -17,12 +17,46 @@ export interface MessageLog {
 }
 
 export type historyMessages = {
-  role: string;
-  content: string;
+  role: string,
+  content: string,
 }[];
+//export type historyMessages =  [] | [{ role: string, content: string }]
 
 export type Resp = {
-  status: any;
+  choices: [{index: number, message: {role: string, content: string}, finish_reason: string}];
+  status: number;
+  message: {role: string, content: string};
+  content: string;
   response: unknown;
   usage: unknown | null;
 };
+
+export interface ChatMessage {
+  role: string;
+  content: string;
+}
+
+export interface ChatConfig {
+  model: string;
+  messages?: ChatMessage[];
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+}
+
+export interface TranscriptionResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  status: string;
+  transcription_text: string;
+}
+
+export interface RequestHeaders {
+  Authorization: string;
+  "Content-Type": string;
+  [key: string]: string; // Para incluir outras possíveis propriedades de cabeçalho
+}
