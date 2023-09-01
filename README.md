@@ -6,7 +6,7 @@
 
 ## Documentação da Classe GPT
 
-OBS: Não gosta de ler? Vá para o final do documento e leia o codigo de exemplo.
+OBS: Não gosta de ler? Vá para o final do documento e leia o [codigo de exemplo.](#codigo-de-exemplo)
 
 A classe GPT é usada para se comunicar com a API OFICIAL disponibilizado OpenAI e tem vários métodos úteis para enviar solicitações de bate-papo e gerenciar o histórico de mensagens.
 
