@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import Axios, {
+import openaiRequest, {
   ChatConfig,
   ConfigGPT,
   Resp,
@@ -7,7 +7,7 @@ import Axios, {
   historyMessages,
   Message,
 } from "../asb-gpt";
-export class GPT extends Axios {
+export class GPT extends openaiRequest {
   private messages: historyMessages;
   apikey: string | undefined;
   history?: boolean | undefined;

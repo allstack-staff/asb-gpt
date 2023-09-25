@@ -1,6 +1,6 @@
-import Axios, { IMAGE_URL } from "../asb-gpt";
+import openaiRequest, { IMAGE_URL } from "../asb-gpt";
 
-export class DALLE extends Axios {
+export class DALLE extends openaiRequest {
   apikey: string | undefined;
   constructor(apikey: string | undefined) {
     super(apikey);

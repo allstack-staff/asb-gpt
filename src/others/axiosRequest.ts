@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import FormData from "form-data";
 import { RequestHeaders } from "../asb-gpt";
 
-export default class Axios {
+export default class openaiRequest {
   apiKey: string | undefined;
   constructor(apiKey: string | undefined) {
     this.apiKey = apiKey;

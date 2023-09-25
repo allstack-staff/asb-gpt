@@ -1,5 +1,5 @@
-import Axios from "./others/axiosRequest";
-export default Axios;
+import openaiRequest from "./others/axiosRequest";
+export default openaiRequest;
 
 export * from "./actions/log";
 export * from "./actions/gpt";

@@ -1,10 +1,10 @@
-import Axios from "../others/axiosRequest";
+import openaiRequest from "../others/axiosRequest";
 import fs from "fs";
 import FormData from "form-data";
 import { AxiosResponse } from "axios";
 import { AUDIO_URL, TranscriptionResponse } from "../asb-gpt";
 
-class Voice extends Axios {
+class Voice extends openaiRequest {
   constructor(apiKey: string | undefined) {
     super(apiKey);
     this.apiKey;
