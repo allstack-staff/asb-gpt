@@ -36,10 +36,14 @@
     "form-data": "^4.0.0"
   },
   "files": [
+    "src/",
     "lib/",
+    "asb-gpt.js",
+    "./@types",
     "README.md",
     "pnpm-lock.yaml",
     "package-lock.json",
-    "asb-gpt.js"
+    "tsconfig.json",
+    "LICENSE"
   ]
 }
