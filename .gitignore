@@ -132,9 +132,6 @@ dist
 #openai
 test.js
 
-#json
-*.json
-
 #Typescript
 dist/
 build/
