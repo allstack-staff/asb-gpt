@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import openaiRequest, { ChatConfig, ConfigGPT, historyMessages, Message } from "../asb-gpt";
+import openaiRequest, { ChatConfig, ConfigGPT, ChatCompletion, historyMessages, Message } from "../asb-gpt";
 export declare class GPT extends openaiRequest {
     private messages;
     apikey: string | undefined;
@@ -17,6 +17,6 @@ export declare class GPT extends openaiRequest {
         role: string;
         content: string;
     }>;
-    requestChat(config: ChatConfig): Promise<AxiosResponse<string, object>>;
+    requestChat(config: ChatConfig): Promise<AxiosResponse<ChatCompletion>>;
 }
 //# sourceMappingURL=gpt.d.ts.map

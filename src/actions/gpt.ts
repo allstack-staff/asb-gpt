@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import openaiRequest, {
   ChatConfig,
   ConfigGPT,
-  Resp,
+  ChatCompletion,
   CHAT_URL,
   historyMessages,
   Message,
@@ -109,7 +109,7 @@ export class GPT extends openaiRequest {
 
   async requestChat(
     config: ChatConfig
-  ): Promise<AxiosResponse<string, object>> {
+  ): Promise<AxiosResponse<ChatCompletion>> {
     const mergedConfig = { ...this.defaultConfig, ...config };
 
     try {
