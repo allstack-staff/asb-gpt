@@ -23,6 +23,7 @@ export type historyMessages = {
 //export type historyMessages =  [] | [{ role: string, content: string }]
 
 export interface ChatCompletion {
+  warning?: string;
   id: string;
   object: string;
   created: number;
@@ -37,10 +38,12 @@ export interface ChatCompletion {
 
 export interface Choice {
   index: number;
+  text?: string;
   message: {
     role: string;
     content: string;
   };
+  logprobs: any;
   finish_reason: string;
 }
 
@@ -51,6 +54,7 @@ export interface ChatMessage {
 
 export interface ChatConfig {
   model: string;
+  prompt?: string
   messages?: ChatMessage[];
   temperature?: number;
   max_tokens?: number;
