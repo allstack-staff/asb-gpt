@@ -1,6 +1,6 @@
 {
   "name": "asb-gpt",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Library that allows you to deploy openAI features in javascript projects more easily",
   "main": "./lib/asb-gpt.js",
   "types": "@types/asb-gpt.d.ts",

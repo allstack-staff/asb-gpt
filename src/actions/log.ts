@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Message, MessageLog } from '../asb-gpt';
+
 export class LOG {
     getTimeStamp(): string {
         const now = new Date();
@@ -8,29 +8,34 @@ export class LOG {
         return `${date}_${time}`;
     }
 
-    async SaveMessageToJSON(
-        senderId: string,
-        message: Message | string,
-        response?: Record<string, any>, // Usar 'Record<string, any>' para aceitar campos dinâmicos.
-        name: string = 'gpt.json'
-    ): Promise<void> {
-        if (!name.endsWith(".json")) {
-            throw new Error(`Incorrect name format. Use ${name}.json or leave it empty to assign the default value,`)
+    public async saveMessageToJSON(path: string, id: string, message: string, response?: string): Promise<void> {
+        /**
+         *
+         * ```ts
+         * const Log = new Log;
+         * log.saveMessageToJson("../json/log.json", "user01", "I'am batman", "Whats?")
+         * ```
+         * @param
+         */
+
+        try {
+            let historyJSON: { [key: string]: { message: string; response?: string } } = {};
+
+            if (fs.existsSync(path)) {
+                const history = fs.readFileSync(path, "utf-8");
+                historyJSON = JSON.parse(history);
+            }
+
+            historyJSON[id] = {
+                message,
+                response: response ? response : undefined,
+            };
+
+            fs.writeFileSync(path, JSON.stringify(historyJSON, null, 2));
+        } catch (error) {
+            throw new Error(`Erro ao salvar no arquivo JSON: ${error}`);
         }
 
-        const history = fs.readFileSync(name, 'utf-8');
-        const historyJSON: { [key: string]: MessageLog } = JSON.parse(history);
-
-        const logEntry: MessageLog = {
-            senderId,
-            message,
-            response: response ? response : undefined,
-        };
-
-        const timestamp = this.getTimeStamp();
-        historyJSON[timestamp] = logEntry;
-
-        fs.writeFileSync('gpt.json', JSON.stringify(historyJSON, null, 2));
     }
 
 

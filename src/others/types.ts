@@ -77,3 +77,10 @@ export interface RequestHeaders {
   "Content-Type": string;
   [key: string]: string; // Para incluir outras possíveis propriedades de cabeçalho
 }
+
+export type LogJson = {
+  id: string;
+  message: string;
+  response?: string;
+  path: string;
+}
