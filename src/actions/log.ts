@@ -8,34 +8,21 @@ export class LOG {
         return `${date}_${time}`;
     }
 
-    public async saveMessageToJSON(path: string, id: string, message: string, response?: string): Promise<void> {
-        /**
-         *
-         * ```ts
-         * const Log = new Log;
-         * log.saveMessageToJson("../json/log.json", "user01", "I'am batman", "Whats?")
-         * ```
-         * @param
-         */
-
+    public async saveMessagesToJSON(path: string, messages: Array<{ role: string; content: string }>): Promise<void> {
         try {
-            let historyJSON: { [key: string]: { message: string; response?: string } } = {};
+            let historyArray: Array<{ role: string; content: string }> = [];
 
             if (fs.existsSync(path)) {
                 const history = fs.readFileSync(path, "utf-8");
-                historyJSON = JSON.parse(history);
+                historyArray = JSON.parse(history);
             }
 
-            historyJSON[id] = {
-                message,
-                response: response ? response : undefined,
-            };
+            historyArray = historyArray.concat(messages);
 
-            fs.writeFileSync(path, JSON.stringify(historyJSON, null, 2));
+            fs.writeFileSync(path, JSON.stringify(historyArray, null, 2));
         } catch (error) {
             throw new Error(`Erro ao salvar no arquivo JSON: ${error}`);
         }
-
     }
 
 

@@ -67,4 +67,10 @@ export interface RequestHeaders {
     "Content-Type": string;
     [key: string]: string;
 }
+export type LogJson = {
+    id: string;
+    message: string;
+    response?: string;
+    path: string;
+};
 //# sourceMappingURL=types.d.ts.map
