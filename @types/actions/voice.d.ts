@@ -1,4 +1,4 @@
-import openaiRequest from "../others/axiosRequest";
+import openaiRequest from "../others/openaiRequest";
 import { TranscriptionResponse } from "../asb-gpt";
 declare class Voice extends openaiRequest {
     constructor(apiKey: string | undefined);

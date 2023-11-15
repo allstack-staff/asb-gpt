@@ -1,7 +1,9 @@
-import openaiRequest from "../asb-gpt";
+import { AxiosResponse } from "axios";
+import openaiRequest, { DalleCompletion, DalleErrorRequest, DalleResponse } from "../asb-gpt";
 export declare class DALLE extends openaiRequest {
     apikey: string | undefined;
     constructor(apikey: string | undefined);
-    createImage(prompt: string, n?: number, size?: string, response_format?: string, user?: string | undefined): Promise<import("axios").AxiosResponse<any, any>>;
+    createDefaultImage(path: string, prompt: string, name?: string): Promise<void>;
+    createImage(params: DalleCompletion): Promise<AxiosResponse<DalleResponse, DalleErrorRequest>>;
 }
 //# sourceMappingURL=dalle.d.ts.map

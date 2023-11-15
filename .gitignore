@@ -135,4 +135,5 @@ test.js
 #Typescript
 dist/
 build/
+images/
 test.ts

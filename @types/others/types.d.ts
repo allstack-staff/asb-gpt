@@ -73,4 +73,32 @@ export type LogJson = {
     response?: string;
     path: string;
 };
+export type DalleCompletion = {
+    model: string;
+    prompt: string;
+    n: number;
+    size: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null;
+    quality?: string;
+    response_format?: 'url' | 'b64_json' | null;
+    style?: "vivid" | "natural" | null;
+    user?: string;
+};
+export interface DalleErrorRequest {
+    error?: {
+        code?: number | null;
+        message?: string;
+        param?: any;
+        type?: string;
+    };
+}
+export interface DalleResponse extends DalleErrorRequest {
+    created: number;
+    data: [
+        {
+            revised_prompt: string;
+            url: string;
+            b64_json: string;
+        }
+    ];
+}
 //# sourceMappingURL=types.d.ts.map

@@ -1,4 +1,4 @@
-import openaiRequest from "../others/axiosRequest";
+import openaiRequest from "../others/openaiRequest";
 import fs from "fs";
 import FormData from "form-data";
 import { AxiosResponse } from "axios";
