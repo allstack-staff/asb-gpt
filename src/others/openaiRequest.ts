@@ -53,7 +53,7 @@ export default class openaiRequest {
     const options = {
       method: "POST",
       url: IMAGE_URL,
-      timeout: 40000,
+      timeout: 90000,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.apiKey}`,
