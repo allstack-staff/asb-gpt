@@ -2,7 +2,7 @@ import openaiRequest from "../others/openaiRequest";
 import fs from "fs";
 import FormData from "form-data";
 import { AxiosResponse } from "axios";
-import { AUDIO_URL, TranscriptionResponse } from "../asb-gpt";
+import { AUDIO_URL, TranscriptionResponse } from "../asb-openai";
 
 class Voice extends openaiRequest {
   constructor(apiKey: string | undefined) {

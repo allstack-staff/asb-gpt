@@ -1,14 +1,14 @@
 {
-  "name": "asb-gpt",
+  "name": "asb-openai",
   "version": "1.0.0",
   "description": "Library that allows you to deploy openAI features in javascript projects more easily",
-  "main": "lib/asb-gpt.js",
-  "types": "lib/asb-gpt.d.ts",
+  "main": "lib/asb-openai.js",
+  "types": "lib/asb-openai.d.ts",
   "exports": {
     ".": {
       "types": {
-        "require": "./asb-gpt.d.ts",
-        "default": "./asb-gpt.d.ts"
+        "require": "./asb-openai.d.ts",
+        "default": "./asb-openai.d.ts"
       }
     }
   },

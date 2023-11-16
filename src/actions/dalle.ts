@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import openaiRequest, { DalleCompletion, DalleErrorRequest, DalleResponse, IMAGE_URL } from "../asb-gpt";
+import openaiRequest, { DalleCompletion, DalleErrorRequest, DalleResponse, IMAGE_URL } from "../asb-openai";
 import { DalleErrorRequestImage } from "../exceptions/DalleErrorRequest";
 
 export class DALLE extends openaiRequest {

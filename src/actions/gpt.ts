@@ -6,7 +6,7 @@ import openaiRequest, {
   CHAT_URL,
   historyMessages,
   Message,
-} from "../asb-gpt";
+} from "../asb-openai";
 export class GPT extends openaiRequest {
   private messages: historyMessages;
   apikey: string | undefined;

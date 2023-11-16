@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import FormData from "form-data";
-import { DalleCompletion, DalleErrorRequest, DalleResponse, IMAGE_URL, RequestHeaders, WriteStreamError } from "../asb-gpt";
+import { DalleCompletion, DalleErrorRequest, DalleResponse, IMAGE_URL, RequestHeaders, WriteStreamError } from "../asb-openai";
 import { createWriteStream } from "fs";
 
 export default class openaiRequest {
